@@ -1,6 +1,12 @@
 import React from 'react'
+import useWord from '../hooks/useWord';
+import useWords from '../hooks/useWords';
 
-export const Statistics = ({wins = 0, played = 0}) => {
+export const Statistics = ({wins = 0, played = 0, word }) => {
+  const { parseTimer } = useWord();
+  const { currentWordIndex } = useWords();
+  const {minutes , seconds} = parseTimer();
+
   return (
     <div>
         <div className="flex flex-row justify-around text-center">
@@ -14,8 +20,11 @@ export const Statistics = ({wins = 0, played = 0}) => {
             </div>
         </div>
         <div className="flex flex-col items-center">
-            <p>siguiente palabra</p>
-            <p>4:20</p>
+          {
+            currentWordIndex === 5 && <p>La palabra era: <b>{word}</b></p>
+          }
+            <p>Siguiente palabra</p>
+            <p>{minutes}:{parseInt(seconds)}</p>
         </div>
     </div>
   )

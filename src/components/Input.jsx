@@ -4,7 +4,7 @@ export const Input = forwardRef(({onChange, onKeyDown, index, value, disabled, c
 
 
   return (
-    <div className="p-2">
+    <div className="p-1">
     <input
       disabled={disabled}
       value={value}

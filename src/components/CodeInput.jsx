@@ -7,20 +7,25 @@ const COLOR_MAP = {
     [CHAR_STATUS.CONTAINS]: 'bg-yellow-300',
     [CHAR_STATUS.INCORRECT]: 'bg-neutral-400',
 }
+const BACKSPACE_KEY = 8;
+const ENTER_KEY = 13;
 
-export const CodeInput = ({ word, onEnterKey, position, currentWord = [], onWordChange, isActive }) => {
+export const CodeInput = ({ word, onEnterKey, currentWord = [], onWordChange, isActive }) => {
     const [wordStatus, setWordStatus] = useState([]);
     const [disabledInput, setDisabledInput] = useState(false);
     const fakeData = Array.from({ length: 5 });
     const inputsRef = useRef([]);
 
-    const BACKSPACE_KEY = 8;
-    const LEFT_ARROW_KEY = 37;
-    const RIGHT_ARROW_KEY = 39;
-    const ENTER_KEY = 13;
 
     useEffect(() => {
-        debugger;
+        if (currentWord.length === 0) {
+            setWordStatus([]);
+            setDisabledInput(false);
+        }
+    }, [currentWord])
+    
+
+    useEffect(() => {
         if (currentWord.length > 5 && currentWord.at(-1) === 'Enter') {
             setDisabledInput(true);
             currentWord.pop();
@@ -63,12 +68,6 @@ export const CodeInput = ({ word, onEnterKey, position, currentWord = [], onWord
             }
             onWordChange(null, e.target.id);
         }
-        // if (e.keyCode === LEFT_ARROW_KEY) {
-        //     inputsRef.current[Number(e.target.id) - 1].focus();
-        // }
-        // if (e.keyCode === RIGHT_ARROW_KEY) {
-        //     inputsRef.current[Number(e.target.id) + 1].focus();
-        // }
         if (e.keyCode === ENTER_KEY) {
             onWordChange('Enter');
         }

@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CodeInput } from '../components/CodeInput';
 import { CHAR_STATUS } from '../helpers/verifyWord';
 import useWords from '../hooks/useWords';
 
-export const WordInput = ({ word, onGameFinish }) => {
+export const WordInput = ({ word, onGameFinish, onGameOver }) => {
   const { nextWord, currentWordIndex, setWord, getWord, addChar, removeChar } = useWords();
+
+  useEffect(() => {
+    if (currentWordIndex === 5) {
+      onGameOver();
+    }
+  }, [currentWordIndex])
+  
 
   const handleEnter = (wordStatus) => {
     if (wordStatus.every((status) => status === CHAR_STATUS.OK)) {
-      onGameFinish()
+      onGameFinish();
     }
     nextWord();
   }

@@ -7,6 +7,6 @@ export const Key = ({onClick, buttonKey}) => {
     }
 
   return (
-    <button className='focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-400 rounded-md w-12 h-12 border text-center mx-1 my-1' onClick={handleClick}>{buttonKey}</button>
+    <button className='focus:ring-zinc-900 focus:border-zinc-900 block sm:text-sm border-white-400 bg-gray-300 rounded-md w-12 h-12 border text-center mx-1 my-1' onClick={handleClick}>{buttonKey}</button>
   )
 }

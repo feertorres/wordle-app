@@ -1,14 +1,14 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
-export const Modal = ({title, textButton, handleOnClick, openModal, closeModal, children}) => {
+export const Modal = ({title, textButton, openModal, closeModal, children}) => {
 
   return (
     <>
       <Transition appear show={openModal} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 z-10 overflow-y-auto max-w-none "
+          className="fixed inset-0 z-10 overflow-y-auto max-w-none bg-zinc-300 "
           onClose={closeModal}
         >
           <div className="min-h-screen px-4 text-center">
@@ -39,7 +39,7 @@ export const Modal = ({title, textButton, handleOnClick, openModal, closeModal, 
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl w-4/5">
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-center align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
@@ -50,7 +50,7 @@ export const Modal = ({title, textButton, handleOnClick, openModal, closeModal, 
                     {children}
                 </div>
 
-                <div className="mt-4 justify-center">
+                <div className="mt-4 flex justify-center">
                   <button
                     type="button"
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"

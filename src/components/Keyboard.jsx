@@ -23,7 +23,7 @@ export const Keyboard = () => {
     }
 
   return (
-    <div className='bg-zinc-500'>
+    <div className='bg-gray-200 m-2 rounded-lg'>
         {[FIRST_ROW, SECOND_ROW, THIRD_ROW].map((row, index) => (
             <div key={index} className='flex flex-row'>
                 {
