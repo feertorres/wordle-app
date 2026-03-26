@@ -1,12 +1,24 @@
 import React from 'react'
 
-export const Key = ({onClick, buttonKey}) => {
+const WIDE_KEYS = ['Enter', 'Backspace'];
 
-    const handleClick = () => {
-        onClick(buttonKey);
-    }
+export const Key = ({ onClick, buttonKey }) => {
+    const isWide = WIDE_KEYS.includes(buttonKey);
+    const label = buttonKey === 'Backspace' ? '⌫' : buttonKey;
 
-  return (
-    <button className='focus:ring-zinc-900 focus:border-zinc-900 block sm:text-sm border-white-400 bg-gray-300 rounded-md w-12 h-12 border text-center mx-1 my-1' onClick={handleClick}>{buttonKey}</button>
-  )
+    return (
+        <button
+            className={`
+                flex items-center justify-center min-w-0
+                h-14 rounded font-bold uppercase text-white text-sm
+                bg-[#818384] hover:bg-[#9a9b9c] active:bg-[#6a6b6c]
+                transition-colors duration-100 cursor-pointer select-none
+                mx-[3px]
+                ${isWide ? 'flex-[1.5] text-xs' : 'flex-1'}
+            `}
+            onClick={() => onClick(buttonKey)}
+        >
+            {label}
+        </button>
+    )
 }

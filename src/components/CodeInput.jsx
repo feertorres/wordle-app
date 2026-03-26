@@ -3,27 +3,30 @@ import { Input } from '../components/Input';
 import { CHAR_STATUS, verifyWord } from '../helpers/verifyWord';
 
 const COLOR_MAP = {
-    [CHAR_STATUS.OK]: 'bg-lime-500',
-    [CHAR_STATUS.CONTAINS]: 'bg-yellow-300',
-    [CHAR_STATUS.INCORRECT]: 'bg-neutral-400',
+    [CHAR_STATUS.OK]:        '#e91e63',
+    [CHAR_STATUS.CONTAINS]:  '#ff6f00',
+    [CHAR_STATUS.INCORRECT]: '#37474f',
 }
+
+const REVEAL_DELAY_MS = 350;
 const BACKSPACE_KEY = 8;
 const ENTER_KEY = 13;
 
 export const CodeInput = ({ word, onEnterKey, currentWord = [], onWordChange, isActive }) => {
     const [wordStatus, setWordStatus] = useState([]);
+    const [revealedColors, setRevealedColors] = useState([]);
     const [disabledInput, setDisabledInput] = useState(false);
     const fakeData = Array.from({ length: 5 });
     const inputsRef = useRef([]);
-
+    const prevWordLengthRef = useRef(0);
 
     useEffect(() => {
         if (currentWord.length === 0) {
             setWordStatus([]);
+            setRevealedColors([]);
             setDisabledInput(false);
         }
     }, [currentWord])
-    
 
     useEffect(() => {
         if (currentWord.length > 5 && currentWord.at(-1) === 'Enter') {
@@ -33,10 +36,24 @@ export const CodeInput = ({ word, onEnterKey, currentWord = [], onWordChange, is
             setWordStatus(verifyWord(word, wordToCompare));
         }
     }, [currentWord.length])
-    
 
     useEffect(() => {
-        wordStatus.length && onEnterKey(wordStatus);
+        if (!wordStatus.length) return;
+
+        // Stagger the color reveal so each cell flips one after another
+        wordStatus.forEach((status, i) => {
+            setTimeout(() => {
+                setRevealedColors(prev => {
+                    const next = [...prev];
+                    next[i] = COLOR_MAP[status];
+                    return next;
+                });
+            }, i * REVEAL_DELAY_MS);
+        });
+
+        // Notify parent after all cells have been revealed
+        const totalDelay = (wordStatus.length - 1) * REVEAL_DELAY_MS + 500;
+        setTimeout(() => onEnterKey(wordStatus), totalDelay);
     }, [wordStatus])
 
     useEffect(() => {
@@ -44,6 +61,16 @@ export const CodeInput = ({ word, onEnterKey, currentWord = [], onWordChange, is
             inputsRef.current[0].focus();
         }
     }, [isActive])
+
+    // Advance focus when a character is added via the on-screen keyboard
+    useEffect(() => {
+        const prevLen = prevWordLengthRef.current;
+        prevWordLengthRef.current = currentWord.length;
+
+        if (isActive && currentWord.length > prevLen && currentWord.length < 5) {
+            inputsRef.current[currentWord.length]?.focus();
+        }
+    }, [currentWord.length])
 
     const handleInputRef = (ref) => {
         if (ref && inputsRef.current.length < 5) {
@@ -75,9 +102,19 @@ export const CodeInput = ({ word, onEnterKey, currentWord = [], onWordChange, is
 
     return (
         <div className="flex flex-row">
-            {
-                fakeData.map((input, index) => <Input key={index} ref={handleInputRef} onChange={onChange} index={index} onKeyDown={onKeyDown} value={currentWord[index] || ''} disabled={disabledInput} customClass={COLOR_MAP[wordStatus[index]]} className={`input-${index}`} />)
-            }
+            {fakeData.map((_, index) => (
+                <Input
+                    key={index}
+                    ref={handleInputRef}
+                    onChange={onChange}
+                    index={index}
+                    onKeyDown={onKeyDown}
+                    value={currentWord[index] || ''}
+                    disabled={disabledInput}
+                    revealColor={revealedColors[index]}
+                    className={`input-${index}`}
+                />
+            ))}
         </div>
     )
 }

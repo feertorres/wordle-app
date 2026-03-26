@@ -20,7 +20,8 @@ const useWords = () => {
         if (currentWord.length > 5) return
         if (currentWord.length === 5 && char !== 'Enter') return
         const aux = [...currentWord];
-        aux.splice(position || (currentWord.length + 1), 1, char);
+        const insertAt = position !== undefined ? Number(position) : currentWord.length;
+        aux.splice(insertAt, 1, char);
         setWord(aux, currentWordIndex);
     }
 
